@@ -12,7 +12,8 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     if (~controlabilidad(A,B))
         error('Sistema de estados aumentados no es controlable. Ingrese un sistema controlable.')
     end
-
+    
+    
     % ----------------- %
     % --- FUNCTIONS --- %
     
@@ -34,5 +35,11 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
             controlable = false;
         end
     end
-
+    
+    % Compute K with analytic LQR
+    function K = AnalyticLQR(A,B,Q,R)
+        options=optimset('disp','iter','LargeScale','off','TolFun',0.01,'MaxIter',100000,'MaxFunEvals',10000);
+        P = fsolve(@(x) x*A + A'*x - x*B*(R^-1)*B'*x + Q, 3*rand(size(A)));
+        K = (R^-1)*B'*P;
+    end
 end 
