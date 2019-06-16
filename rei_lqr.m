@@ -6,13 +6,11 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     A_aug_size = size(A_aug);
     A_aug = [A_aug,zeros(A_aug_size(1),1)];
 
-    %B_aug = [B;zeros(A_aug_size(1),1)];
+    %B_aug = [B;zeros(A_aug_size(1),1)]; 
     
     % Check controllability of the augmented system
     if (~controlabilidad(A,B))
         error('Sistema de estados aumentados no es controlable. Ingrese un sistema controlable.')
-    else
-        disp("Controlable :)")
     end
 
     % ----------------- %
