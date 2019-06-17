@@ -3,16 +3,16 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     % Extract space state matrices from ss model
     [A,B,C,D] = ssdata(plantaMIMO);
     
-    %Generate augmented A & B matrices
+    % Generate augmented A & B matrices
     A_aug = [A;C];
     A_aug_size = size(A_aug);
     A_aug = [A_aug,zeros(A_aug_size(1),A_aug_size(1)-A_aug_size(2))];
     
     B_size = size(B);
-    B_aug = [B;zeros(A_aug_size(1)-A_aug_size(2),B_size(2))]; 
+    B_aug = [B;zeros(A_aug_size(1)-A_aug_size(2),B_size(2))];
     
     % Check controllability of the augmented system
-    if (~controlabilidad(A,B))
+    if (~controlabilidad(A_aug,B_aug))
         error('Sistema de estados aumentados no es controlable. Ingrese un sistema controlable.')
     end
     
@@ -20,6 +20,8 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     % --- FUNCTIONS --- %
     
     % Function to check controllability
+    % Returns 'true' if the system is controllable, otherwise, returns
+    % 'false'
     function controlable = controlabilidad(A,B)
         rows_A = size(A,1);
         
@@ -38,10 +40,11 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
         end
     end
     
+
     % Compute K with analytic LQR
     function K = AnalyticLQR(A,B,Q,R)
-        options=optimset('disp','iter','LargeScale','off','TolFun',0.01,'MaxIter',100000,'MaxFunEvals',10000);
-        P = fsolve(@(x) x*A + A'*x - x*B*(R^-1)*B'*x + Q, 3*rand(size(A)));
+        options=optimset('Algorithm','quasi-newton','disp','off','MaxIter',1000000,'MaxFunEvals',10000);
+        P = fsolve(@(x) x*A + A'*x - x*B*(R^-1)*B'*x + Q, rand(size(A)));
         K = (R^-1)*B'*P;
     end
 end 
