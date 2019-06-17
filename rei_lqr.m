@@ -21,9 +21,9 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     K_total_size = size(K_total);
     
     C_size = size(C);
-    
-    K = K_total(1:K_total_size(2)-C_size(1));
-    Ki = K_total(K_total_size(2)-C_size(1)+1:K_total_size(2));
+    Klimit=(K_total_size(2)-C_size(1));
+    K = K_total(:,1:Klimit);
+    Ki = K_total(:,Klimit+1:K_total_size(2));
     
     % ----------------- %
     % --- FUNCTIONS --- %
