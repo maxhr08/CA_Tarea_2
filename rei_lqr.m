@@ -17,7 +17,7 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     end
     
     % Calculate K & Ki
-    [K_total] = LQR(A_aug,B_aug,Q,R);
+    [K_total] = lqr(A_aug,B_aug,Q,R);
     K_total_size = size(K_total);
     
     K = K_total(1:K_total_size(2)-1);
