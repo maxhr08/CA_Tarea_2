@@ -20,8 +20,10 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     [K_total] = lqr(A_aug,B_aug,Q,R);
     K_total_size = size(K_total);
     
-    K = K_total(1:K_total_size(2)-1);
-    Ki = K_total(K_total_size(2));
+    C_size = size(C);
+    
+    K = K_total(1:K_total_size(2)-C_size(1));
+    Ki = K_total(K_total_size(2)-C_size(1)+1:K_total_size(2));
     
     % ----------------- %
     % --- FUNCTIONS --- %
