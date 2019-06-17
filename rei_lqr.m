@@ -17,7 +17,7 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     end
     
     % Calculate K & Ki
-    K_total = AnalyticLQR(A_aug,B_aug,Q,R);
+    [K_total] = LQR(A_aug,B_aug,Q,R);
     K_total_size = size(K_total);
     
     K = K_total(1:K_total_size(2)-1);
@@ -45,12 +45,5 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
         else
             controlable = false;
         end
-    end
-
-    % Compute K with analytic LQR
-    function K = AnalyticLQR(A,B,Q,R)
-        options=optimset('Algorithm','quasi-newton','disp','off','MaxIter',1000000,'MaxFunEvals',10000);
-        P = fsolve(@(x) x*A + A'*x - x*B*(R^-1)*B'*x + Q, rand(size(A)));
-        K = (R^-1)*B'*P;
     end
 end 
