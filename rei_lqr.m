@@ -1,7 +1,7 @@
 function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     
     % Extract space state matrices from ss model
-    [A,B,C,D] = ssdata(plantaMIMO);
+    [A,B,C] = ssdata(plantaMIMO);
     
     % Generate augmented A & B matrices
     A_aug = [A;C];
@@ -15,6 +15,13 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
     if (~controlabilidad(A_aug,B_aug))
         error('Sistema de estados aumentados no es controlable. Ingrese un sistema controlable.')
     end
+    
+    % Calculate K & Ki
+    K_total = AnalyticLQR(A_aug,B_aug,Q,R);
+    K_total_size = size(K_total);
+    
+    K = K_total(1:K_total_size(2)-1);
+    Ki = K_total(K_total_size(2));
     
     % ----------------- %
     % --- FUNCTIONS --- %
@@ -39,7 +46,6 @@ function [K,Ki] = rei_lqr(plantaMIMO, Q, R)
             controlable = false;
         end
     end
-    
 
     % Compute K with analytic LQR
     function K = AnalyticLQR(A,B,Q,R)
