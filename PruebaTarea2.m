@@ -7,13 +7,13 @@ D = zeros(2);
 % Sistema MIMO
 plantaMIMO = ss(A,B,C,D);
 % Matrices para REI con LQR, los valores Qii los
-% define cada equipo durante sus pruebas según los
+% define cada equipo durante sus pruebas segÃºn los
 % resultados de la Tarea 1.
 % Ejemplo Qii = N
-% Durante la prueba final se usará un conjunto de
+% Durante la prueba final se usarÃ¡ un conjunto de
 % valores que debe producir la respuesta mostrada
-Q = diag([Q11 Q22 Q33 Q44 Q55 Q66]);
+Q = diag([1 1 1 1 1 1]);
 R = eye(2);
-% Llamada a la función creada
+% Llamada a la funciÃ³n creada
 [K,Ki] = rei_lqr(plantaMIMO,Q,R)
 % Simule el sistema en Simulink
